@@ -1,0 +1,17 @@
+---
+title: Web scraping football data using R
+author: Paul Burgoine
+date: '2017-06-01'
+slug: web-scraping-football-data-using-r
+categories:
+  - R
+  - Web scraping
+tags:
+  - R
+  - Web scraping
+draft: yes
+---
+
+For my first project for this blog I decided to combine two of my loves, football and R. Having won my fantasy league this year with a respectable points haul of 2176, finishing in position 36,967 within England, and 94,774 globally I was interested to see which players were scoring me the most points.
+
+
