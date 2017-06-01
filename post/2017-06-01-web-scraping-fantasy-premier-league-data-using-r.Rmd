@@ -1,0 +1,186 @@
+---
+title: Web scraping Fantasy Premier League data using R
+author: Paul Burgoine
+date: '2017-06-01'
+slug: web-scraping-fantasy-premier-league-data-using-r
+categories:
+  - R
+  - Web scraping
+tags:
+  - R
+  - Web scraping
+  - phantomjs
+  - Football
+draft: no
+---
+
+For my first project for this blog I decided to combine two of my loves, football and R. Having won my fantasy league this year with a respectable points haul of 2176, finishing in position 36,967 within England, and 94,774 globally I was interested to see which players were scoring me the most points.
+
+Now the amount of data on the FPL website is good; everyone’s scores are public and you can see your own points week by week. However, clicking from week to week is a bit clunky and the individual player scores, located below the player’s jersey are rather small and don’t take centre stage. The page has a pitch layout as it is user friendly; it makes setting a formation, transferring players and making substitutions intuitive but it isn’t helpful for data analysis.
+
+![](/images/fpl_jersey.png)
+
+At first I thought about simply copying and pasting numbers week by week into a spreadsheet, but for 38 weeks this would have been incredibly error prone and time consuming. So that’s when I had the idea of web scraping the data by writing a script to do the tedious work for me. I had never web scraped any data before, however I read an article on [Kaggle](http://blog.kaggle.com/2017/01/31/scraping-for-craft-beers-a-dataset-creation-tutorial/) about web scraping beer data from a website and it sounded relatively simple and an interesting new skill to learn.
+
+I decided I would try to write it in Python using BeautifulSoup, and it seemed relatively simple to get going; I managed to write a short script that seemed to be working – I was able to scrape data from the menus and static text on the FPL site. This is content everyone would see when visiting the site but when it came to taking player’s names, teams, and most importantly points hauls the script drew a blank. After a bit of research I realised it was because player data is JavaScript generated content. Users individual players and points are unique and based on team selection and bench and captaincy choices. Even when visiting a specific users page for a specific gameweek the content was still JS generated. Back to the drawing board.
+
+So I did some research and attempted to write a Python script that could handle JavaScript content (basically the script would have to run as if it were a person visiting the site to get the JavaScript to run). I half-heartedly attempted a few different options I that people were recommending on Stack Overflow (DryScape and Selenium were two packages/methods I saw referenced multiple times and subsequently tried and to get working). It just seemed like a lot of effort for a simple process of collecting 15 names and numbers for 38 different pages. I can use Python, however I am not massively experienced with it and I am sure this is partly to blame for the issues I ran into here.
+
+I stepped away from the computer for a while and then when I came back decided I would google R’s capabilities to webscrape. I am far more experienced using R and its flexibility in dealing with all sorts of problems have never let me down before. To my delight I read about phantomjs for R and managed to get it working almost immediately. To use the code below you will need to download [phantomjs](http://phantomjs.org/download.html). It isn't a R package so you then need to copy and paste the file in the following location on your computer if your using a Mac /usr/local/bin/. And thats it! R can now scrape JS content. Back to web scraping and I broke the problem down into 3 steps –
+ 
+1. Writing a function to access the data and create a local copy on my computer.
+2. Search through the downloaded data and extract all the relevant data.
+3. Clean the data and get into a usable format for data visualisation.
+
+##Scraping the data
+
+The first function is below. It takes a number from 1 to 38 if you just want a specific gameweek, or a vector of gameweeks if you would like multiple. I found that the code was inconsistent at retrieving data, it would occasionally return empty and hence I just used a brute force method to get every gameweek, whereby the function will keep attempting a gameweek until successful. Although it will sometimes fail for a gameweek, other times it would succeed for the same week, and hence found that simply retrying fixed any issues. If you would like to use the code below change my user id number (1537030) to whatever yours is - if you go on the points tab for any gameweek it will be located in the address bar.
+ 
+
+```{r} 
+#install.packages("rvest")
+library(rvest)
+
+###############################################
+
+#Function to scrape site
+fplscraper <- function(gameweek){
+  url_week = paste("http://fantasy.premierleague.com/a/team/1537030/event/", gameweek, sep="")
+  
+  # render HTML from the site with phantomjs
+ repeat{ 
+  writeLines(sprintf("var page = require('webpage').create();
+                     page.open('%s', function () {
+                     console.log(page.content); //page source
+                     phantom.exit();
+                     });", url_week), con="scrape.js")
+
+  system("phantomjs scrape.js > scrape.html")
+  
+  # extract the content you need
+  html_week = read_html("scrape.html")
+  
+  # check extract worked properly
+  if(length(html_week %>% html_nodes("#ismr-pos1") %>% html_nodes(".ism-element__name") %>% html_text()>0)) break
+  print("Extract failed...retrying")
+}
+  
+  print("Record extracted")
+return(html_week)
+}
+``` 
+
+##Extracting information of value
+
+The next function takes the output we generate from the first function, and then returns a list (or a number of lists if more than one gameweek is fed to it) of key metrics for each of the players involved in that gameweek, namely, players name, points, team, whether captain or vice-captain and whether the player was on the bench or field.
+
+```{r} 
+
+#Function to search extract data from specific gameweek
+calc_points <- function(fpl_data){
+  
+  players = c(1:15)
+  Players_Names = c()
+  Players_Points = c()
+  Players_Team = c()
+  Players_Captain = c()
+  Players_Played = c()
+  
+  for (player in players){
+  
+  player_pos <- paste("#ismr-pos", player,sep="")
+  player_name <- as.character(fpl_data %>% html_nodes(player_pos) %>% html_nodes(".ism-element__name") %>% html_text())
+  player_data <- as.numeric(fpl_data %>% html_nodes(player_pos) %>% html_nodes(".ism-element__data") %>% html_text())
+  player_shirt <- fpl_data %>% html_nodes(player_pos) %>% html_nodes(".ism-element__shirt")
+  player_team <- as.character(html_attr(player_shirt, "title"))
+  player_cap = fpl_data %>% html_nodes(player_pos) %>% html_nodes(".ism-element__control--captain") %>% html_nodes(".ism-element__icon")
+  player_captain = as.character(html_attr(player_cap, "title"))
+  if (length(player_captain)==0){player_captain = NA}
+  player_played = "Blank"
+  if (player<12) {player_played <- "Played"} else {player_played <- "Benched"}
+  
+  Players_Names = c(Players_Names,player_name)
+  Players_Points = c(Players_Points,player_data)
+  Players_Team = c(Players_Team,player_team)
+  Players_Captain = c(Players_Captain,player_captain)
+  Players_Played = c(Players_Played,player_played)
+  
+  }
+  
+  df <- list(Players_Names,Players_Points,Players_Team,Players_Captain,Players_Played)
+  return(df)
+}
+
+``` 
+
+
+##Constructing the dataset from our lists
+
+Finally, the last function will spit out a data frame of all our players in the selected gameweeks, with variables for the player name, team and then n variables for gameweeks, whether they played, and if they were captain.
+
+```{r} 
+
+#Function to bind all our gameweeks into one final data set
+
+data_merge <- function(fpl_data){
+  
+  all_players = c()
+  for (gw in c(1:38)) {
+    all_players = c(all_players, paste(all_gw[[gw]][[1]],all_gw[[gw]][[3]],sep=";"))
+  }
+  
+  unique_players = unique(all_players)
+  result = matrix(NA,nrow = length(unique_players), ncol = 116)  
+  
+  
+  unique_names = strsplit(unique_players,';',fixed=TRUE)
+  
+  split_names = gsub(";.*", "", unique_players)
+  split_teams = gsub(".*;", "", unique_players)
+  
+
+  final_data = data.frame(result)
+  
+  names(final_data) <- c("Player", "Team", paste0("GW", 1:38),paste0("CAP", 1:38),paste0("PLAY", 1:38))
+  final_data$Player <- split_names
+  final_data$Team <- split_teams
+  
+  for(ngw in c(1:38)){
+    
+    match_indexes = match(all_gw[[ngw]][[1]],split_names)
+    
+    for (matches in c(1:15)){
+      final_data[[2+ngw]][match_indexes[matches]] = all_gw[[ngw]][[2]][matches]
+      final_data[[40+ngw]][match_indexes[matches]] = all_gw[[ngw]][[4]][matches]
+      final_data[[78+ngw]][match_indexes[matches]] = all_gw[[ngw]][[5]][matches]
+    }
+    
+    
+  }
+  
+  return(final_data)
+
+}
+
+``` 
+
+#Calling our functions & save to csv
+
+Next bit is nice and simple.
+
+```{r} 
+
+#Call our functions
+gameweeks <- c(1:38)
+gameweek_data<- lapply(gameweeks,fplscraper)
+all_gw<-lapply(gameweek_data,calc_points)
+final_dataset<-data_merge(all_gw)
+
+
+#Save to csv
+write.csv(final_dataset, file = "FPLdata1617.csv",fileEncoding = "UTF-8")
+
+``` 
+
+And thats it! We have a lovely CSV file ready to analyse. In my next post I will be visualising the data. Thanks for reading.
+

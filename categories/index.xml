@@ -11,38 +11,20 @@
     
     
     <item>
-      <title>Features</title>
-      <link>/categories/features/</link>
-      <pubDate>Thu, 28 May 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/features/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>R</title>
       <link>/categories/r/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
       <guid>/categories/r/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Releases</title>
-      <link>/categories/releases/</link>
-      <pubDate>Mon, 15 Jun 2015 00:00:00 +0000</pubDate>
+      <title>Web Scraping</title>
+      <link>/categories/web-scraping/</link>
+      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>/categories/releases/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tranquilpeak</title>
-      <link>/categories/tranquilpeak/</link>
-      <pubDate>Mon, 15 Jun 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/tranquilpeak/</guid>
+      <guid>/categories/web-scraping/</guid>
       <description></description>
     </item>
     
