@@ -6,20 +6,10 @@
     <description>Recent content in Posts on Paul Burgoine</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Sep 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 01 Jun 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>FPL Data 16/17 Bubble Chart</title>
-      <link>/2017/09/fpl-data-16-17-bubble-chart/</link>
-      <pubDate>Thu, 28 Sep 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/2017/09/fpl-data-16-17-bubble-chart/</guid>
-      <description>Below is a link to a bubble chart I created using Shiny apps, for the data I scraped from the FPL site. The bubbles have hover labels to reveal more information and there is a drop down to include/exclude bench points. Finally there is a slider for gameweek.
-Click here to view.</description>
-    </item>
     
     <item>
       <title>Web scraping fantasy football data using R</title>
@@ -28,15 +18,6 @@ Click here to view.</description>
       
       <guid>/2017/06/web-scraping-fantasy-football-data-using-r/</guid>
       <description>Now the amount of data on the FPL website is good; everyone’s scores are public and you can see your own points week by week. However, clicking from week to week is a bit clunky and the individual player scores, located below the player’s jersey are rather small and don’t take centre stage. The page has a pitch layout as it is user friendly; it makes setting a formation, transferring players and making substitutions intuitive but it isn’t helpful for data analysis.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/1/01/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/1/01/</guid>
-      <description>FPL Data 16/17 Bubble Chart       code{white-space: pre;} pre:not([class]) { background-color: white; }  if (window.hljs &amp;&amp; document.readyState &amp;&amp; document.readyState === &#34;complete&#34;) { window.setTimeout(function() { hljs.initHighlighting(); }, 0); }  h1 { font-size: 34px; } h1.title { font-size: 38px; } h2 { font-size: 30px; } h3 { font-size: 24px; } h4 { font-size: 18px; } h5 { font-size: 16px; } h6 { font-size: 12px; } .</description>
     </item>
     
   </channel>
