@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>R on Paul Burgoine</title>
-    <link>/categories/r/</link>
-    <description>Recent content in R on Paul Burgoine</description>
+    <title>Shiny on Paul Burgoine</title>
+    <link>/categories/shiny/</link>
+    <description>Recent content in Shiny on Paul Burgoine</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 28 Sep 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/categories/shiny/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +19,6 @@
       <guid>/2017/09/last-years-fpl-season-bubble-chart/</guid>
       <description>Linked in this post is my 2016-17 FPL points by week visualised as an interactive bubble chart. The data was collected using a web scraping script I wrote in R and detailed in my previous post.
 The larger the bubble the more points the player earned that week. If you are not on a mobile device, you can hover over the bubbles to reveal players points that week, whether they were sat on the bench or in my team and whether they were the captain or not.</description>
-    </item>
-    
-    <item>
-      <title>Web scraping fantasy football data using R</title>
-      <link>/2017/06/web-scraping-fantasy-football-data-using-r/</link>
-      <pubDate>Thu, 01 Jun 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/2017/06/web-scraping-fantasy-football-data-using-r/</guid>
-      <description>Now the amount of data on the FPL website is good; everyone’s scores are public and you can see your own points week by week. However, clicking from week to week is a bit clunky and the individual player scores, located below the player’s jersey are rather small and don’t take centre stage. The page has a pitch layout as it is user friendly; it makes setting a formation, transferring players and making substitutions intuitive but it isn’t helpful for data analysis.</description>
     </item>
     
   </channel>
